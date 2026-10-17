@@ -1,0 +1,14 @@
+[toolchain]
+anchor_version = "1.2.1"
+solana_version = "3.1.10"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.devnet]
+stakes = "97VaN9bk5Ee57BFaW5UVoojHjhy3K16RvRcZEnu5cULU"
+
+[provider]
+cluster = "devnet"
+wallet = "../../data/solana/authority.json"  # the coordinator's key (SOLANA_KEYPAIR)

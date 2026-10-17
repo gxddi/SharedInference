@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f1016">
+  <meta name="description" content="Share the power of open models with your community.">
+  <title>Shared Inference</title>
+
+  <link rel="preload" href="/assets/fonts/plus-jakarta-sans.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+</head>
+
+<body>
+  <main class="stage">
+    <!-- Earth -->
+    <div class="earth" aria-hidden="true">
+      <canvas></canvas>
+    </div>
+
+    <!-- Navigation -->
+    <header class="header">
+      <a class="logo" href="/" aria-label="Shared Inference — home">
+        <img src="/assets/logo.png" alt="" width="800" height="800">
+      </a>
+      <nav aria-label="Account">
+        <a class="account" href="/login/">Account</a>
+      </nav>
+    </header>
+
+    <!-- Intro -->
+    <section class="intro" aria-labelledby="intro-title">
+      <h1 id="intro-title">Shared Inference</h1>
+      <p>Share the power of <u>open models</u> with your community.</p>
+
+      <div class="actions">
+        <a class="quickstart" href="/docs/">Quickstart!</a>
+        <a href="/become-a-node/">Become a node</a>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/script.ts"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,285 @@
+/********
+ * Card *
+ ********/
+
+/* one centred card for sign-in + terminal approval, like Tailscale's */
+.auth {
+  /* presence */
+  width: min(400px, 100% - 32px);
+  margin: auto;
+  padding: 32px 0;
+
+  /* font */
+  text-align: center;
+}
+
+.auth .card {
+  padding: 32px;
+  text-align: left;
+}
+
+.auth .logo {
+  width: 40px;
+  margin: 0 auto 20px;
+}
+
+.auth h1 {
+  margin: 0;
+
+  /* font */
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  text-align: center;
+}
+
+.auth .lead {
+  text-align: center;
+  text-wrap: balance;
+}
+
+
+/********
+ * Form *
+ ********/
+
+#auth-form {
+  margin-top: 24px;
+}
+
+.auth label {
+  display: block;
+  margin: 16px 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.auth label:first-child {
+  margin-top: 0;
+}
+
+.auth .hint {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.auth input {
+  /* presence */
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid rgb(177 178 181 / .3);
+  border-radius: 8px;
+
+  /* font */
+  font: inherit;
+  font-size: 15px;
+
+  /* colour */
+  background: #0b0d12;
+  color: var(--paper);
+}
+
+.auth input:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 0;
+  border-color: transparent;
+}
+
+.primary {
+  /* presence */
+  display: block;
+  width: 100%;
+  height: 44px;
+  margin-top: 24px;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+
+  /* font */
+  font-size: 15px;
+  font-weight: 700;
+
+  /* colour */
+  background: var(--button);
+  color: var(--ink);
+}
+
+.auth .primary:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+/* looks like a link */
+.text-button {
+  /* presence */
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+
+  /* font */
+  font-size: inherit;
+  font-weight: 600;
+
+  /* colour */
+  background: transparent;
+  color: #81c1bd;
+}
+
+.text-button:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+
+/***************
+ * Card footer *
+ ***************/
+
+/* full-width strip along the bottom of the card */
+.card-foot {
+  /* presence */
+  margin: 24px -32px -32px;
+  padding: 16px 32px;
+  border-top: 1px solid rgb(177 178 181 / .12);
+
+  /* font */
+  font-size: 13px;
+  text-align: center;
+
+  /* colour */
+  color: #b5bcc5;
+}
+
+.card-foot code {
+  font-size: 12px;
+  color: #bce0d9;
+}
+
+
+/************
+ * Messages *
+ ************/
+
+.message {
+  margin: 12px 0 0;
+
+  /* font */
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+
+  /* colour */
+  color: #b5bcc5;
+}
+
+.message:empty { display: none; }
+.message[data-error="true"] { color: #ffb5a5; }
+
+.done {
+  margin: 16px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.done a,
+.card-foot a {
+  font-weight: 600;
+  color: #81c1bd;
+  text-decoration: none;
+}
+
+.done a:hover,
+.card-foot a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+
+/**********
+ * Device *
+ **********/
+
+/* what's asking to connect from the terminal */
+.device {
+  margin-top: 24px;
+}
+
+.device h2 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.device dl {
+  /* presence */
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 16px;
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid rgb(177 178 181 / .16);
+  border-radius: 8px;
+
+  /* font */
+  font-size: 14px;
+
+  /* colour */
+  background: #0b0d12;
+}
+
+.device dt {
+  color: #9aa1ab;
+}
+
+.device dd {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.device code {
+  font-size: 18px;
+  letter-spacing: .08em;
+  color: #bce0d9;
+}
+
+
+/*********
+ * Below *
+ *********/
+
+.below {
+  display: inline-block;
+  margin-top: 20px;
+
+  /* font */
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+
+  /* colour */
+  color: var(--account);
+}
+
+.below:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+
+/*****************
+ * Small screens *
+ *****************/
+
+@media (max-width: 540px) {
+  .auth .card {
+    padding: 24px;
+  }
+
+  .card-foot {
+    margin: 24px -24px -24px;
+    padding: 14px 24px;
+  }
+}

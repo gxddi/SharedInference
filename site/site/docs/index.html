@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f1016">
+  <meta name="description" content="Use the Shared Inference OpenAI-compatible API from SDKs and coding harnesses.">
+  <title>Quickstart · Shared Inference docs</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/docs/styles.css">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+</head>
+<body>
+  <header class="header">
+    <a class="logo" href="/" aria-label="Shared Inference — home"><img src="/assets/logo.png" alt="" width="32" height="32"></a>
+    <nav aria-label="Account"><a class="account" href="/login/">Account</a></nav>
+  </header>
+
+  <div class="docs">
+    <nav class="docs-nav" aria-label="Documentation">
+      <p>Get started</p>
+      <ul>
+        <li class="top"><a href="/docs/" aria-current="page">Quickstart</a></li>
+        <li><a href="#api-key">API keys</a></li>
+        <li><a href="#openai-sdk">OpenAI SDK</a></li>
+        <li><a href="#models">Models</a></li>
+      </ul>
+      <p>Harnesses</p>
+      <ul>
+        <li><a href="#codex">Codex CLI</a></li>
+        <li><a href="#opencode">opencode</a></li>
+        <li><a href="#aider">Aider</a></li>
+        <li><a href="#continue">Continue</a></li>
+        <li><a href="#frameworks">Frameworks</a></li>
+      </ul>
+      <p>Concepts</p>
+      <ul>
+        <li class="top"><a href="/docs/how-it-works/">How it works</a></li>
+        <li><a href="/docs/how-it-works/#verification">Verification</a></li>
+        <li><a href="/docs/how-it-works/#settlement">Payouts on Solana</a></li>
+      </ul>
+      <p>Contribute</p>
+      <ul>
+        <li class="top"><a href="/become-a-node/">Become a node</a></li>
+      </ul>
+    </nav>
+
+    <main class="article">
+      <h1>Quickstart</h1>
+      <p class="lead">Shared Inference serves open models from community-run nodes behind an OpenAI-compatible API. Point any OpenAI SDK or coding harness at the base URL below.</p>
+
+      <p class="callout"><strong>Preview.</strong> Chat completions run on community nodes now. A model is only listed while nodes hold every layer of it. <code>POST /responses</code>, which Codex CLI needs, isn't served yet.</p>
+
+      <div class="code"><pre><code>https://YOUR-HOST/api/v1</code></pre></div>
+      <p>Requests authenticate with <code>Authorization: Bearer &lt;key&gt;</code>. The API serves <code>GET /models</code> and <code>POST /chat/completions</code> (including <code>"stream": true</code>). Text messages only; tool calls aren't supported.</p>
+
+      <h2 id="api-key">Get an API key</h2>
+      <p>Create a key on the <a href="/keys/">API keys</a> page, then keep it in an environment variable. Every example on this page reads it from there.</p>
+      <div class="code"><pre><code>export SHAREDINFERENCE_API_KEY="si-..."</code></pre></div>
+
+      <h2 id="first-request">Make your first request</h2>
+      <div class="code" data-tabs>
+        <div role="tablist"><button type="button" role="tab" aria-selected="true">cURL</button><button type="button" role="tab" aria-selected="false">Python</button><button type="button" role="tab" aria-selected="false">TypeScript</button></div>
+        <pre><code>curl https://YOUR-HOST/api/v1/chat/completions \
+  -H "Authorization: Bearer $SHAREDINFERENCE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen2.5-7b-instruct",
+    "messages": [{"role": "user", "content": "What is distributed inference?"}]
+  }'</code></pre>
+        <pre hidden><code>import os
+import requests
+
+response = requests.post(
+    "https://YOUR-HOST/api/v1/chat/completions",
+    headers={"Authorization": f"Bearer {os.environ['SHAREDINFERENCE_API_KEY']}"},
+    json={
+        "model": "qwen2.5-7b-instruct",
+        "messages": [{"role": "user", "content": "What is distributed inference?"}],
+    },
+)
+print(response.json()["choices"][0]["message"]["content"])</code></pre>
+        <pre hidden><code>const response = await fetch('https://YOUR-HOST/api/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    Authorization: `Bearer ${process.env.SHAREDINFERENCE_API_KEY}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    model: 'qwen2.5-7b-instruct',
+    messages: [{ role: 'user', content: 'What is distributed inference?' }],
+  }),
+});
+const data = await response.json();
+console.log(data.choices[0].message.content);</code></pre>
+      </div>
+
+      <h2 id="openai-sdk">Using the OpenAI SDK</h2>
+      <p>The official SDKs work unchanged once you set the base URL and key.</p>
+      <div class="code" data-tabs>
+        <div role="tablist"><button type="button" role="tab" aria-selected="true">Python</button><button type="button" role="tab" aria-selected="false">TypeScript</button></div>
+        <pre><code>import os
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://YOUR-HOST/api/v1",
+    api_key=os.environ["SHAREDINFERENCE_API_KEY"],
+)
+
+completion = client.chat.completions.create(
+    model="qwen2.5-7b-instruct",
+    messages=[{"role": "user", "content": "What is distributed inference?"}],
+)
+print(completion.choices[0].message.content)</code></pre>
+        <pre hidden><code>import OpenAI from 'openai';
+
+const client = new OpenAI({
+  baseURL: 'https://YOUR-HOST/api/v1',
+  apiKey: process.env.SHAREDINFERENCE_API_KEY,
+});
+
+const completion = await client.chat.completions.create({
+  model: 'qwen2.5-7b-instruct',
+  messages: [{ role: 'user', content: 'What is distributed inference?' }],
+});
+console.log(completion.choices[0].message.content);</code></pre>
+      </div>
+
+      <h2 id="harnesses">Coding harnesses</h2>
+      <p>Each harness below takes a custom OpenAI-compatible provider. Set <code>SHAREDINFERENCE_API_KEY</code> first.</p>
+
+      <h3 id="codex">Codex CLI</h3>
+      <p>Add a provider to your user-level config. Codex only speaks the Responses API, so it uses <code>/responses</code> rather than chat completions. That endpoint isn't served yet.</p>
+      <div class="code"><div class="file">~/.codex/config.toml</div><pre><code>model = "qwen2.5-7b-instruct"
+model_provider = "sharedinference"
+
+[model_providers.sharedinference]
+name = "Shared Inference"
+base_url = "https://YOUR-HOST/api/v1"
+env_key = "SHAREDINFERENCE_API_KEY"
+wire_api = "responses"</code></pre></div>
+
+      <h3 id="opencode">opencode</h3>
+      <p>Register the provider, then pick the model with <code>/models</code>.</p>
+      <div class="code"><div class="file">opencode.json</div><pre><code>{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "sharedinference": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Shared Inference",
+      "options": {
+        "baseURL": "https://YOUR-HOST/api/v1",
+        "apiKey": "{env:SHAREDINFERENCE_API_KEY}"
+      },
+      "models": {
+        "qwen2.5-7b-instruct": { "name": "Qwen2.5 7B Instruct" }
+      }
+    }
+  }
+}</code></pre></div>
+
+      <h3 id="aider">Aider</h3>
+      <p>Aider routes <code>openai/</code> models to any compatible base URL.</p>
+      <div class="code"><pre><code>export OPENAI_API_BASE=https://YOUR-HOST/api/v1
+export OPENAI_API_KEY=$SHAREDINFERENCE_API_KEY
+aider --model openai/qwen2.5-7b-instruct</code></pre></div>
+
+      <h3 id="continue">Continue</h3>
+      <p>Add the model to your Continue config and store the key as a secret.</p>
+      <div class="code"><div class="file">~/.continue/config.yaml</div><pre><code>name: Shared Inference
+version: 0.0.1
+schema: v1
+models:
+  - name: Shared Inference
+    provider: openai
+    model: qwen2.5-7b-instruct
+    apiBase: https://YOUR-HOST/api/v1
+    apiKey: ${{ secrets.SHAREDINFERENCE_API_KEY }}</code></pre></div>
+
+      <h3 id="frameworks">Frameworks</h3>
+      <div class="code" data-tabs>
+        <div role="tablist"><button type="button" role="tab" aria-selected="true">Vercel AI SDK</button><button type="button" role="tab" aria-selected="false">LangChain</button></div>
+        <pre><code>import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { generateText } from 'ai';
+
+const sharedInference = createOpenAICompatible({
+  name: 'sharedinference',
+  baseURL: 'https://YOUR-HOST/api/v1',
+  apiKey: process.env.SHAREDINFERENCE_API_KEY,
+});
+
+const { text } = await generateText({
+  model: sharedInference('qwen2.5-7b-instruct'),
+  prompt: 'What is distributed inference?',
+});
+console.log(text);</code></pre>
+        <pre hidden><code>import os
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(
+    model="qwen2.5-7b-instruct",
+    base_url="https://YOUR-HOST/api/v1",
+    api_key=os.environ["SHAREDINFERENCE_API_KEY"],
+)
+print(llm.invoke("What is distributed inference?").content)</code></pre>
+      </div>
+
+      <h2 id="models">Models</h2>
+      <p>List the models you can call right now. A model only appears while nodes hold every one of its layers.</p>
+      <div class="code"><pre><code>curl https://YOUR-HOST/api/v1/models \
+  -H "Authorization: Bearer $SHAREDINFERENCE_API_KEY"</code></pre></div>
+      <p>Each model is priced per million tokens, at the cheapest API provider’s rate. Everything a request is worth goes to the nodes that ran it, paid in devnet SOL.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Model ID</th><th>Prompt</th><th>Completion</th></tr></thead>
+          <tbody>
+            <tr><td><code>qwen2.5-0.5b-instruct</code></td><td>$0.20 / 1M</td><td>$0.20 / 1M</td></tr>
+            <tr><td><code>qwen2.5-1.5b-instruct</code></td><td>$0.10 / 1M</td><td>$0.10 / 1M</td></tr>
+            <tr><td><code>qwen2.5-3b-instruct</code></td><td>$0.10 / 1M</td><td>$0.10 / 1M</td></tr>
+            <tr><td><code>qwen2.5-7b-instruct</code></td><td>$0.10 / 1M</td><td>$0.20 / 1M</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="next">Next</h2>
+      <div class="cards">
+        <a href="/docs/how-it-works/">How it works<span>Routing, verification, and payouts.</span></a>
+        <a href="/become-a-node/">Become a node<span>Contribute compute and get paid in SOL.</span></a>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="/docs/script.js"></script>
+</body>
+</html>

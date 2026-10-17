@@ -1,0 +1,187 @@
+/*********
+ * Setup *
+ *********/
+
+/* install steps that fit one screen, like Tailscale's */
+.setup {
+  width: min(640px, 100% - 32px);
+  margin: auto;
+  padding: 32px 0;
+}
+
+.setup h1 {
+  margin: 0;
+
+  /* font */
+  font-size: clamp(26px, 4vw, 32px);
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+
+
+/*********
+ * Steps *
+ *********/
+
+.steps {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 4px 24px;
+  counter-reset: step;
+}
+
+.steps > li {
+  position: relative;
+  padding: 20px 0 20px 40px;
+  counter-increment: step;
+}
+
+.steps > li + li {
+  border-top: 1px solid rgb(177 178 181 / .12);
+}
+
+/* numbered teal circle */
+.steps > li::before {
+  content: counter(step);
+
+  /* presence */
+  position: absolute;
+  top: 19px;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+
+  /* font */
+  font-size: 12px;
+  font-weight: 700;
+
+  /* colour */
+  background: rgb(90 165 165 / .18);
+  color: #81c1bd;
+}
+
+.steps h2 {
+  margin: 0 0 10px;
+
+  /* font */
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+
+/************
+ * Commands *
+ ************/
+
+.command {
+  /* presence */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 14px;
+  border: 1px solid rgb(177 178 181 / .16);
+  border-radius: 8px;
+
+  /* colour */
+  background: #0b0d12;
+}
+
+.command pre {
+  /* presence */
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+
+  /* font */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.command code {
+  color: #bce0d9;
+}
+
+/* shell prompt, not copied */
+.command code::before {
+  content: '$ ';
+  color: #5d6470;
+  user-select: none;
+}
+
+.command button {
+  /* presence */
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border: 1px solid rgb(177 178 181 / .3);
+  border-radius: 6px;
+  cursor: pointer;
+
+  /* font */
+  font-size: 12px;
+  font-weight: 600;
+
+  /* colour */
+  background: transparent;
+  color: var(--paper);
+}
+
+.command button:hover {
+  background: rgb(177 178 181 / .1);
+}
+
+
+/*********
+ * Other *
+ *********/
+
+.notice {
+  margin: 16px 0 0;
+
+  /* font */
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+
+  /* colour */
+  color: #9aa1ab;
+}
+
+/* screen readers only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+
+/*****************
+ * Small screens *
+ *****************/
+
+@media (max-width: 540px) {
+  .steps {
+    padding: 0 16px;
+  }
+
+  /* number moves beside the heading */
+  .steps > li {
+    padding-left: 0;
+  }
+
+  .steps h2 {
+    padding-left: 34px;
+  }
+
+  .command pre {
+    font-size: 12px;
+  }
+}

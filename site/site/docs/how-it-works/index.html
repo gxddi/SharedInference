@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f1016">
+  <meta name="description" content="How Shared Inference routes requests to community nodes, verifies their output, and pays them on Solana.">
+  <title>How it works · Shared Inference docs</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/docs/styles.css">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+</head>
+<body>
+  <header class="header">
+    <a class="logo" href="/" aria-label="Shared Inference — home"><img src="/assets/logo.png" alt="" width="32" height="32"></a>
+    <nav aria-label="Account"><a class="account" href="/login/">Account</a></nav>
+  </header>
+
+  <div class="docs">
+    <nav class="docs-nav" aria-label="Documentation">
+      <p>Get started</p>
+      <ul>
+        <li class="top"><a href="/docs/">Quickstart</a></li>
+        <li><a href="/docs/#api-key">API keys</a></li>
+        <li><a href="/docs/#openai-sdk">OpenAI SDK</a></li>
+        <li><a href="/docs/#models">Models</a></li>
+      </ul>
+      <p>Harnesses</p>
+      <ul>
+        <li><a href="/docs/#codex">Codex CLI</a></li>
+        <li><a href="/docs/#opencode">opencode</a></li>
+        <li><a href="/docs/#aider">Aider</a></li>
+        <li><a href="/docs/#continue">Continue</a></li>
+        <li><a href="/docs/#frameworks">Frameworks</a></li>
+      </ul>
+      <p>Concepts</p>
+      <ul>
+        <li class="top"><a href="/docs/how-it-works/" aria-current="page">How it works</a></li>
+        <li><a href="#verification">Verification</a></li>
+        <li><a href="#settlement">Payouts on Solana</a></li>
+        <li><a href="#status">Status</a></li>
+      </ul>
+      <p>Contribute</p>
+      <ul>
+        <li class="top"><a href="/become-a-node/">Become a node</a></li>
+      </ul>
+    </nav>
+
+    <main class="article">
+      <h1>How it works</h1>
+      <p class="lead">A coordinator takes OpenAI-compatible requests and runs them across community nodes, each holding a slice of the model’s layers. Every node’s owner stakes SOL. Every job is paid on Solana, a hidden sample is kept for a verifier, and proven fraud burns the stake.</p>
+
+      <p class="callout"><strong>Preview.</strong> Inference across slices, API keys, job records, audit evidence, stakes, payouts and slashes work today, on Solana devnet. The verifier that checks audited jobs isn’t built yet. See <a href="#status">Status</a>.</p>
+
+      <div class="diagram" role="img" aria-label="Clients call the coordinator, which runs each job through nodes holding consecutive slices of the model and records jobs in Tiger Data. The coordinator stakes from each account\'s wallet, pays jobs into the stake, and releases SOL back to the wallet through a Solana program.">
+        <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" font-family="Plus Jakarta Sans, system-ui, sans-serif">
+          <defs><marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#5aa5a5"/></marker></defs>
+          <g fill="#161821" stroke="rgb(177 178 181 / .35)">
+            <rect x="10" y="110" width="160" height="56" rx="8"/>
+            <rect x="240" y="100" width="210" height="76" rx="8" stroke="#5aa5a5"/>
+            <rect x="550" y="10" width="160" height="56" rx="8"/>
+            <rect x="550" y="90" width="160" height="56" rx="8"/>
+            <rect x="550" y="170" width="160" height="56" rx="8"/>
+            <rect x="190" y="236" width="130" height="52" rx="8"/>
+            <rect x="340" y="236" width="150" height="52" rx="8" stroke="#5aa5a5"/>
+            <rect x="550" y="236" width="160" height="52" rx="8"/>
+          </g>
+          <g stroke="#5aa5a5" stroke-width="1.5" fill="none" marker-end="url(#arrow)">
+            <path d="M170 138H238"/>
+            <path d="M450 128L548 40"/>
+            <path d="M450 138H548"/>
+            <path d="M450 148L548 196"/>
+            <path d="M290 176L268 234"/>
+            <path d="M400 176L412 234"/>
+            <path d="M490 262H548"/>
+          </g>
+          <g fill="#e7e1da" font-size="13" font-weight="700" text-anchor="middle">
+            <text x="90" y="135">Client / harness</text>
+            <text x="345" y="130">Coordinator</text>
+            <text x="630" y="35">Node</text>
+            <text x="630" y="115">Node</text>
+            <text x="630" y="195">Node</text>
+            <text x="255" y="259">Tiger Data</text>
+            <text x="415" y="259">Solana program</text>
+            <text x="630" y="259">Owner’s wallet</text>
+          </g>
+          <g fill="#9aa1ab" font-size="11" text-anchor="middle">
+            <text x="90" y="152">OpenAI-compatible API</text>
+            <text x="345" y="148">routing · audits</text>
+            <text x="345" y="163">payouts · slashes</text>
+            <text x="630" y="52">layers 0–9</text>
+            <text x="630" y="132">layers 10–19</text>
+            <text x="630" y="212">layers 20–27</text>
+            <text x="255" y="275">jobs · records</text>
+            <text x="415" y="275">stakes · payouts</text>
+            <text x="630" y="275">stakes · paid back</text>
+          </g>
+        </svg>
+      </div>
+
+      <h2 id="roles">Roles</h2>
+      <ul>
+        <li><strong>Clients</strong> call the <a href="/docs/">OpenAI-compatible API</a> with an <a href="/keys/">API key</a>. They never talk to nodes directly.</li>
+        <li><strong>The coordinator</strong> (<code>sinference/backend/</code>) authenticates clients and nodes, hands out slices, runs every job step, keeps audit evidence, and sends payouts and slashes. Accounts, jobs and records live in Tiger Data.</li>
+        <li><strong>Nodes</strong> run <code>sinference up</code>: a worker that loads a range of a model’s layers and runs them for each job. People join through <a href="/become-a-node/">Become a node</a>.</li>
+        <li><strong>The Solana program</strong> holds each owner’s stake, pays jobs into it from a vault, and burns it on proven fraud. The prototype runs on devnet.</li>
+      </ul>
+
+      <h2 id="lifecycle">Request lifecycle</h2>
+      <ol class="flow">
+        <li>A client sends <code>POST /chat/completions</code>. The coordinator picks a copy of the model whose slices cover every layer, all ready.</li>
+        <li>Each step goes through the coordinator, since nodes only make outgoing connections: token ids to the first slice, its hidden states to the next, and so on. The last slice samples the next token with the job’s seed.</li>
+        <li>The client gets the reply as it’s generated, without waiting for verification or payment.</li>
+        <li>The coordinator records the job: token counts, each node’s share, and hashes of the prompt, the output, and everything that crossed between slices.</li>
+        <li>A payout transaction pays each node’s owner their share into their stake, with the job’s id and its record’s hash.</li>
+      </ol>
+
+      <h2 id="verification">Verifying node output</h2>
+      <p>A hash shows what a node sent, not that it ran the model. Nodes run jobs without checks in the moment. Their owners’ stakes make faking work a losing bet.</p>
+
+      <h3>1. Stakes</h3>
+      <p>Each account adds one Solana wallet for all its nodes, by its private key on the nodes page or in <code>sinference up</code>. A node only gets a slice while the account’s stake covers $20 of SOL for each of its nodes holding one; when a node joins short, the coordinator stakes the difference from the wallet, and a wallet that can’t cover it gets no work. Earnings are paid into the stake too. Both go back to the wallet automatically once the audits that could still catch them are past: earnings 10 minutes after their jobs, collateral once the account’s nodes have left. A slash burns whatever hasn’t gone back.</p>
+
+      <h3>2. Hidden audits</h3>
+      <p>For about 10% of jobs, the coordinator keeps everything that crossed each boundary between slices. It decides when the job starts, and every job looks the same to a node. Every job’s record already holds the hashes of those boundaries, so the kept evidence can’t be swapped later.</p>
+
+      <h3>3. Verdicts</h3>
+      <p>The verifier, the coordinator’s own compute, replays one slice of an audited job from its recorded inputs and compares the outputs. Blame is per slice, because a node that fakes its layers hands honest nodes after it bad inputs they process correctly. A fraudulent verdict burns the owner’s whole stake, bans their account and wallet, and drops their slices. Jobs nobody audits are final once paid.</p>
+      <p>Exact replays need the same GPU model, packages and attention kernel as the node; batch size is always 1. Mixed hardware needs a tolerance, which is still to be set.</p>
+
+      <h2 id="settlement">Payouts on Solana</h2>
+      <p>The program has two account types: <code>Config</code> (the coordinator’s key; its SOL is the payout vault) and <code>Stake</code>, one per wallet and account (a banned flag; its SOL is collateral plus earnings not yet released). Jobs aren’t accounts. They’re linked to the chain by their transactions.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Instruction</th><th>Signed by</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code>stake</code></td><td>Account’s wallet (its key, kept by the coordinator)</td><td>Moves SOL from the wallet into the account’s stake, creating it the first time.</td></tr>
+            <tr><td><code>pay</code></td><td>Coordinator</td><td>Moves a job’s share from the vault into a stake, with the job’s id and its record’s hash.</td></tr>
+            <tr><td><code>release</code></td><td>Coordinator</td><td>Sends SOL from a stake back to its own wallet, and never anywhere else: earnings past their audits, or collateral once the nodes have left.</td></tr>
+            <tr><td><code>slash</code></td><td>Coordinator</td><td>Burns the whole stake and bans it, with the audited job’s id and its evidence’s hash.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>What nodes earn</h3>
+      <p>A job is worth its tokens at its model’s price (see <a href="/docs/#models">Models</a>), converted to SOL at the current SOL/USD price. Its nodes split that by layers × speed in layers per second, measured on that job: nodes as fast per layer are paid by slice size, and equal slices by speed. Each job’s payout is one transaction into the owners’ stakes; it goes on to their wallets once the job’s audit window has passed.</p>
+      <p>The program runs on Solana devnet at <a href="https://explorer.solana.com/address/97VaN9bk5Ee57BFaW5UVoojHjhy3K16RvRcZEnu5cULU?cluster=devnet"><code>97VaN9bk…cULU</code></a>. Devnet SOL is free from <a href="https://faucet.solana.com">faucet.solana.com</a>.</p>
+      <p><strong>Trust model.</strong> The coordinator decides verdicts, and it keeps each account’s wallet key so it can stake for its nodes, which is fine for devnet wallets only. The chain makes every payout, release and slash public and limits what the program lets it do with stakes: pay from the vault, release only to a stake’s own wallet, and burn slashed SOL rather than keep it. Signed node outputs and independent verifiers would make verdicts checkable by others; neither is built.</p>
+
+      <h2 id="limitations">Known limitations</h2>
+      <ul>
+        <li>The verifier isn’t built, so audited jobs keep their evidence but nothing checks it yet.</li>
+        <li>Every token crosses the coordinator once per slice, so nodes far from it are slow.</li>
+        <li>Text only: no tool calls, and <code>POST /responses</code> (Codex CLI) isn’t served yet.</li>
+        <li>The site handles one request at a time, so a long reply holds up others. Streamed replies arrive in one piece, and requests are capped at 64 KB and 120 seconds.</li>
+        <li>A payout costs more in transaction fees than it pays a node. That’s fine on devnet; real SOL would need payouts batched.</li>
+      </ul>
+
+      <h2 id="status">Status</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>State</th></tr></thead>
+          <tbody>
+            <tr><td>Accounts, browser sign-in, node device approval</td><td><span class="status status--done">Working</span></td></tr>
+            <tr><td><code>sinference</code> installer and CLI</td><td><span class="status status--done">Working</span></td></tr>
+            <tr><td>Live node registry and model selection</td><td><span class="status status--done">Working</span></td></tr>
+            <tr><td>Assigning and loading model slices (layers per node)</td><td><span class="status status--done">Working</span></td></tr>
+            <tr><td>PostgreSQL storage (local or hosted Tiger Data)</td><td><span class="status status--done">Working</span></td></tr>
+            <tr><td>Running jobs across slices</td><td><span class="status status--done">Working</span></td></tr>
+            <tr><td>OpenAI-compatible API (chat completions) and API keys</td><td><span class="status status--done">Working</span></td></tr>
+            <tr><td>Job records and audit evidence</td><td><span class="status status--done">Working</span></td></tr>
+            <tr><td>Verifier (replaying audited slices)</td><td><span class="status status--planned">Planned</span></td></tr>
+            <tr><td>Solana program: stakes, payouts, slashes (devnet)</td><td><span class="status status--done">Working</span></td></tr>
+            <tr><td>Multi-node deployment on Vultr</td><td><span class="status status--planned">Planned</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="/docs/script.js"></script>
+</body>
+</html>

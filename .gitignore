@@ -1,0 +1,26 @@
+*/.codex
+*/.agents
+*/.claude
+*/.aws
+*/server
+*/creds/
+docs/*
+!docs/devpost.md
+!docs/tables.md
+
+# Local runtime data and generated Python files
+/data/
+__pycache__/
+*.pyc
+.venv/
+/sinference/.local/
+/sinference/solana/target/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+
+# Local project instructions for coding assistants
+/AGENTS.md
+/CLAUDE.md
