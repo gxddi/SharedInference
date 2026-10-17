@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f1016">
+  <meta name="referrer" content="no-referrer">
+  <title>Account · Shared Inference</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/login/styles.css">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+</head>
+<body class="page">
+  <main class="auth">
+    <div class="card">
+      <a class="logo" href="/" aria-label="Shared Inference — home"><img src="/assets/logo.png" alt="" width="40" height="40"></a>
+      <h1 id="auth-title">Sign in.</h1>
+      <p class="lead" id="auth-intro">Connect to Shared Inference.</p>
+
+      <form id="auth-form">
+        <label for="username">Username</label>
+        <input id="username" name="username" autocomplete="username" required minlength="3" maxlength="32" pattern="[A-Za-z0-9_]{3,32}" autocapitalize="none" spellcheck="false" aria-describedby="username-hint">
+        <p class="hint" id="username-hint">3–32 letters, numbers, or underscores.</p>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required maxlength="128" aria-describedby="password-hint">
+        <p class="hint" id="password-hint">At least 12 characters for new accounts.</p>
+        <button class="primary" id="submit-auth" type="submit">Sign in</button>
+        <p class="card-foot"><span id="switch-label">New here?</span> <button type="button" class="text-button" id="switch-auth">Create an account</button></p>
+      </form>
+
+      <section id="device" class="device" hidden aria-labelledby="device-title">
+        <h2 id="device-title">Connect this computer?</h2>
+        <dl>
+          <dt>Device</dt><dd id="device-name"></dd>
+          <dt>Code</dt><dd><code id="device-code"></code></dd>
+        </dl>
+        <p class="hint">Only approve if you started this from your terminal and the name and code match.</p>
+        <button type="button" class="primary" id="approve">Approve connection</button>
+      </section>
+
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+      <p id="done" class="done" hidden>Your terminal will connect automatically. Next, <a href="/nodes/">choose the model</a> this node serves.</p>
+      <noscript>JavaScript is required to sign in and approve your computer.</noscript>
+
+      <section id="signed-in" class="card-foot" hidden aria-label="Account">
+        Signed in as <strong id="account-username"></strong> · <a href="/nodes/">Your nodes</a> · <a href="/keys/">API keys</a> · <button type="button" id="logout" class="text-button">Sign out</button>
+      </section>
+    </div>
+    <a class="below" href="/become-a-node/">Become a node →</a>
+  </main>
+  <script type="module" src="/login/script.js"></script>
+</body>
+</html>

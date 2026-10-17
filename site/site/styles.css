@@ -1,0 +1,347 @@
+/********************
+ * GLOBAL VARIABLES *
+ ********************/
+
+:root {
+  /* scene unit, follows whichever viewport side is tighter (1280×832 design) */
+  --s: min(100vw / 1280, 100svh / 832);
+
+  /* colours */
+  --ink: #0f1016;
+  --paper: #e7e1da;
+  --account: #dae2e7;
+  --divider: #b1b2b5;
+  --teal: #5aa5a5;
+  --quickstart: #17b3a3;
+  --button: #fff;
+
+  /* scheme */
+  color-scheme: dark;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('/assets/fonts/plus-jakarta-sans.ttf') format('truetype');
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--ink);
+}
+
+
+/*************
+ * Main body *
+ *************/
+
+body {
+  /* presence */
+  margin: 0;
+
+  /* font */
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: var(--paper);
+}
+
+button {
+  font: inherit;
+}
+
+
+/**************
+ * Main stage *
+ **************/
+
+.stage {
+  position: relative;
+  min-height: 100svh;
+
+  /* header on top, intro centred in the viewport (bottom padding mirrors the header) */
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 56px;
+
+  /* clip the Earth at the edges */
+  overflow: hidden;
+  isolation: isolate;
+}
+
+
+/**************
+ * Navigation *
+ **************/
+
+.header {
+  /* presence */
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  height: 56px;
+  flex-shrink: 0;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+
+  /* divider */
+  border-bottom: 1px solid rgb(177 178 181 / .35);
+}
+
+.logo {
+  display: flex;
+  width: 32px;
+  aspect-ratio: 1;
+}
+
+.logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: invert(1);
+}
+
+.account {
+  /* presence */
+  padding: 0;
+  border: 0;
+  background: none;
+
+  /* font */
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+
+  /* colour */
+  color: var(--account);
+}
+
+
+/*********
+ * Intro *
+ *********/
+
+.intro {
+  /* presence */
+  position: relative;
+  z-index: 1;
+  width: min(720px, 100% - 32px);
+  margin: auto;
+  padding: 24px 0;
+
+  /* font */
+  text-align: center;
+}
+
+.intro h1 {
+  margin: 0;
+
+  /* font */
+  font-size: clamp(32px, 64 * var(--s), 56px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -.02em;
+}
+
+.intro p {
+  margin: clamp(10px, 18 * var(--s), 18px) 0 0;
+
+  /* font */
+  font-size: clamp(15px, 18 * var(--s), 18px);
+  font-weight: 600;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.intro u {
+  text-underline-offset: .12em;
+  text-decoration-thickness: 1px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: clamp(18px, 28 * var(--s), 28px);
+}
+
+.actions button,
+.actions a {
+  /* presence */
+  min-width: 156px;
+  height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 8px;
+
+  /* font */
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+
+  /* colour */
+  background: var(--button);
+  color: var(--ink);
+}
+
+.actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.account { text-decoration: none; }
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 4px;
+}
+
+.actions .quickstart {
+  color: var(--quickstart);
+}
+
+/* disabled for now, drawn as enabled */
+button:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+  -webkit-text-fill-color: currentColor;
+}
+
+
+/*********
+ * Earth *
+ *********/
+
+/* anchored to the centre, sized by the tighter viewport side */
+.earth {
+  position: absolute;
+  left: calc(50% - 30 * var(--s));
+  top: calc(56px + 150 * var(--s));
+  width: calc(961 * var(--s));
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+
+/* still Earth, shown until the canvas is ready */
+.earth::before {
+  /* presence */
+  content: '';
+  position: absolute;
+  inset: 2.08%;
+  border-radius: 50%;
+
+  /* plain ocean disc with the outline, until the dot-matrix texture is painted */
+  background: #11151f;
+  box-shadow: 0 0 0 6px rgb(90 165 165 / .3);
+}
+
+.earth canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.earth--ready canvas {
+  opacity: 1;
+}
+
+.earth--ready::before {
+  visibility: hidden;
+}
+
+
+/********************
+ * Portrait screens *
+ ********************/
+
+@media (max-aspect-ratio: 1/1) {
+  .intro h1 {
+    font-size: clamp(32px, 8vw, 56px);
+  }
+
+  .intro p {
+    font-size: 16px;
+  }
+
+  /* globe rises from the bottom, below the buttons */
+  .earth {
+    left: 50%;
+    top: calc(50svh + 120px);
+    width: max(560px, 130vw);
+    translate: -30% 0;
+  }
+}
+
+
+/************************
+ * Shared page elements *
+ ************************/
+
+/* account pages: header on top, content filling the rest */
+.page {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  border: 1px solid rgb(177 178 181 / .2);
+  border-radius: 12px;
+  background: #161821;
+}
+
+.lead {
+  margin: 6px 0 0;
+
+  /* font */
+  font-size: 15px;
+  line-height: 1.5;
+
+  /* colour */
+  color: #b5bcc5;
+}
+
+.hint {
+  margin: 8px 0 0;
+
+  /* font */
+  font-size: 13px;
+  line-height: 1.5;
+
+  /* colour */
+  color: #9aa1ab;
+}
+
+.hint a {
+  color: var(--account);
+}
+
+.hint code {
+  font-size: 12px;
+  color: #bce0d9;
+  white-space: nowrap;
+}
+
+code,
+pre {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+/* beats any display set above */
+[hidden] {
+  display: none !important;
+}

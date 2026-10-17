@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f1016">
+  <meta name="description" content="Install sinference and connect your computer to Shared Inference.">
+  <title>Become a node · Shared Inference</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/become-a-node/styles.css">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+</head>
+<body class="page">
+  <header class="header">
+    <a class="logo" href="/" aria-label="Shared Inference — home"><img src="/assets/logo.png" alt="" width="32" height="32"></a>
+    <nav aria-label="Account"><a class="account" href="/login/">Account</a></nav>
+  </header>
+  <main class="setup">
+    <h1>Become a node</h1>
+    <p class="lead">Connect this computer to Shared Inference from your terminal.</p>
+
+    <ol class="card steps">
+      <li>
+        <h2>Install sinference</h2>
+        <div class="command"><pre><code id="install-command">Loading install command…</code></pre><button type="button" data-copy="install-command" aria-label="Copy install command">Copy</button></div>
+        <p class="hint">Linux or macOS with Python 3.10+ and curl. Installs to <code>~/.local/bin</code>. <a href="https://github.com/gxddi/SharedInference/blob/main/scripts/install.sh">Read the installer</a></p>
+      </li>
+      <li>
+        <h2>Connect your account</h2>
+        <div class="command"><pre><code id="up-command">Loading setup command…</code></pre><button type="button" data-copy="up-command" aria-label="Copy setup command">Copy</button></div>
+        <p class="hint">Open the link it prints on any device, sign in, and approve if the name and code match.</p>
+      </li>
+      <li>
+        <h2>Choose a model</h2>
+        <p class="hint">Keep the command running to stay connected, then pick what this computer serves on <a href="/nodes/">your nodes</a>. The first time, it also asks for a devnet wallet to stake from and get paid to (or add it on your nodes page). Your sign-in is saved for next time. Remove it with <code>sinference logout</code>.</p>
+      </li>
+    </ol>
+
+    <p class="notice">Early preview: stakes and payouts use Solana devnet SOL, free from faucet.solana.com.</p>
+    <p id="copy-status" class="sr-only" role="status" aria-live="polite"></p>
+  </main>
+  <script type="module" src="/become-a-node/script.js"></script>
+</body>
+</html>

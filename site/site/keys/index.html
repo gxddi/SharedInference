@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f1016">
+  <meta name="referrer" content="no-referrer">
+  <title>API keys · Shared Inference</title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/keys/styles.css">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+</head>
+
+<body class="page">
+  <!-- Navigation -->
+  <header class="header">
+    <a class="logo" href="/" aria-label="Shared Inference — home"><img src="/assets/logo.png" alt="" width="32" height="32"></a>
+    <nav aria-label="Account"><a class="account" href="/login/">Account</a></nav>
+  </header>
+
+  <main class="keys">
+    <h1>API keys</h1>
+    <p class="lead">For the OpenAI-compatible API at <code id="base-url">/api/v1</code>. See the <a href="/docs/">quickstart</a>.</p>
+
+    <!-- New key -->
+    <form class="card create" id="create" hidden>
+      <label for="name">Name</label>
+      <div class="row">
+        <input id="name" name="name" required maxlength="64" placeholder="e.g. laptop, opencode" autocomplete="off">
+        <button type="submit" id="create-button">Create key</button>
+      </div>
+      <div class="new" id="new" hidden>
+        <p class="hint">Copy it now. It won't be shown again.</p>
+        <div class="command"><code id="new-key"></code><button type="button" id="copy">Copy</button></div>
+      </div>
+    </form>
+
+    <!-- Existing keys -->
+    <div class="card list" id="list" hidden>
+      <table>
+        <thead><tr><th>Name</th><th>Key</th><th>Created</th><th>Last used</th><th></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+
+    <p class="card empty" id="signed-out" hidden><a href="/login/">Sign in</a> to manage your API keys.</p>
+    <p id="message" class="hint" role="status" aria-live="polite"></p>
+
+    <template id="row">
+      <tr>
+        <td><strong class="name"></strong></td>
+        <td class="hint-cell"></td>
+        <td class="created"></td>
+        <td class="used"></td>
+        <td><button type="button" class="revoke">Revoke</button></td>
+      </tr>
+    </template>
+  </main>
+
+  <script type="module" src="/keys/script.js"></script>
+</body>
+
+</html>

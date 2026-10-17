@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f1016">
+  <meta name="referrer" content="no-referrer">
+  <title>Nodes · Shared Inference</title>
+
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/nodes/styles.css">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+</head>
+
+<body class="page">
+  <!-- Navigation -->
+  <header class="header">
+    <a class="logo" href="/" aria-label="Shared Inference — home"><img src="/assets/logo.png" alt="" width="32" height="32"></a>
+    <nav aria-label="Account"><a class="account" href="/login/">Account</a></nav>
+  </header>
+
+  <main class="nodes">
+    <div class="nodes-head">
+      <div>
+        <h1>Nodes</h1>
+        <p class="lead">Computers running <code>sinference</code> on your account.</p>
+      </div>
+      <a class="add" href="/become-a-node/">Add a node</a>
+    </div>
+
+    <!-- The account's wallet (only while Solana's on): its nodes stake from it + get paid to it -->
+    <section class="card wallet-card" id="wallet-card" hidden aria-labelledby="wallet-title">
+      <div class="wallet-head">
+        <div>
+          <h2 id="wallet-title">Wallet</h2>
+          <p class="hint" id="wallet-need"></p>
+        </div>
+        <button type="button" id="replace" hidden>Replace</button>
+      </div>
+
+      <dl class="wallet-figures" id="wallet-figures" hidden>
+        <div><dt>Address</dt><dd><code id="wallet"></code></dd></div>
+        <div><dt>Staked</dt><dd id="staked">–</dd></div>
+      </dl>
+
+      <form class="wallet-form" id="wallet-form" hidden>
+        <input id="key" type="password" placeholder="Wallet private key" aria-label="Wallet private key" required autocomplete="off" spellcheck="false">
+        <button type="submit">Add wallet</button>
+      </form>
+      <p class="hint">Devnet only: the server keeps this key to stake for your nodes. You can also add it from <code>sinference up</code>.</p>
+      <p class="hint" id="wallet-message" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- Live list (refreshes every few seconds) -->
+    <div class="card list" id="list" hidden>
+      <table>
+        <thead><tr><th>Node</th><th>Address</th><th>Available VRAM</th><th>Model</th><th>Status</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+
+    <!-- Nothing to list -->
+    <p class="card empty" id="empty" hidden>No nodes yet. Run <code>sinference up</code> on a computer to add one.</p>
+    <p class="card empty" id="signed-out" hidden><a href="/login/">Sign in</a> to see your nodes.</p>
+    <p id="message" class="hint" role="status" aria-live="polite"></p>
+
+    <template id="row">
+      <tr>
+        <td><span class="status"></span><strong class="name"></strong></td>
+        <td class="ip"></td>
+        <td class="vram"></td>
+        <td><span class="model"></span> <a class="choose"></a></td>
+        <td class="seen"></td>
+      </tr>
+    </template>
+  </main>
+
+  <script type="module" src="/nodes/script.js"></script>
+</body>
+
+</html>
