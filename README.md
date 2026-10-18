@@ -4,6 +4,8 @@ Distributed inference across spare GPUs. Models are split by layer across comput
 
 Contributors stake and receive payments in SOL on Solana devnet. Built with Python, PyTorch, PostgreSQL/TimescaleDB, and a C++ web server.
 
+[Website](https://66-42-90-154.sslip.io:1025/) · [Docs](https://66-42-90-154.sslip.io:1025/docs/)
+
 ## Set up (inference testing)
 
 Requires Python 3, an API key, and a model ready on the network. No Python packages to install for the chat test.
@@ -28,7 +30,7 @@ python3 tests/chat.py --base-url https://your-server/api/v1
 
 Run open-weight models without needing all their memory on one computer, and pay people for the compute they share.
 
-More on [inference](docs/inference.md) and [settlement](docs/solana.md).
+More on [inference and settlement](https://66-42-90-154.sslip.io:1025/docs/how-it-works/).
 
 ---
 
